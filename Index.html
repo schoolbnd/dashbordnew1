@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صفحه شروع شخصی</title>
+
+  <!-- فونت فارسی وزیرمتن -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Vazirmatn', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#080D1A',
+            obsidian: '#0F172A',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      font-family: 'Vazirmatn', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #070B14;
+      color: #F8FAFC;
+      overflow-x: hidden;
+    }
+
+    /* افکت شیشه‌ای مدرن (Glassmorphism) */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.58);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.45);
+    }
+
+    .glass-pill {
+      background: rgba(30, 41, 59, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-pill:hover {
+      background: rgba(51, 65, 85, 0.78);
+      border-color: rgba(20, 184, 166, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .shortcut-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.62) 0%, rgba(15, 23, 42, 0.72) 100%);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .shortcut-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(45, 212, 191, 0.4);
+      box-shadow: 0 14px 28px -10px rgba(20, 184, 166, 0.25), 0 0 0 1px rgba(45, 212, 191, 0.15);
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
+    }
+
+    .quick-circle {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s ease;
+    }
+
+    .group:hover .quick-circle {
+      transform: translateY(-3px) scale(1.05);
+      border-color: rgba(45, 212, 191, 0.5);
+      box-shadow: 0 10px 22px -6px rgba(20, 184, 166, 0.3);
+    }
+
+    /* انیمیشن لرزش ملایم در حالت ویرایش */
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(0.985); }
+    }
+    .edit-mode-active .editable-item {
+      animation: gentlePulse 2.4s infinite ease-in-out;
+      border-color: rgba(251, 191, 36, 0.45);
+    }
+
+    /* اسکرول‌بار سفارشی */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.4);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(71, 85, 105, 0.6);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(20, 184, 166, 0.7);
+    }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-teal-500/30 selection:text-teal-200 pb-12">
+
+  <!-- پس‌زمینه نوری محیطی (Ambient Radial Glows) -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <div class="absolute -top-32 right-1/4 w-[520px] h-[520px] rounded-full bg-teal-500/10 blur-[130px]"></div>
+    <div class="absolute top-1/3 -left-24 w-[460px] h-[460px] rounded-full bg-cyan-600/10 blur-[130px]"></div>
+    <div class="absolute bottom-0 right-1/3 w-[500px] h-[400px] rounded-full bg-indigo-600/10 blur-[140px]"></div>
+  </div>
+
+  <!-- کانتینر اصلی صفحه -->
+  <main id="appContainer" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 space-y-6">
+
+    <!-- ۱. بنر ساحلی بالای صفحه (Hero Coastal Banner) -->
+    <section class="relative w-full h-36 sm:h-48 md:h-56 rounded-3xl overflow-hidden shadow-2xl border border-white/10 group">
+      <img
+        id="heroBannerImg"
+        src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=85"
+        onerror="this.onerror=null;this.src='https://placehold.co/1600x400/0f293a/5eead4?text=Coastal+Waves+Banner';"
+        alt="امواج ساحل دریا"
+        class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+      />
+      <!-- گرادینت ملایم برای هماهنگی با تم تیره -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[#070B14]/85 via-[#070B14]/20 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-teal-950/30 via-transparent to-cyan-950/30"></div>
+
+      <!-- اطلاعات ظریف روی بنر (ساعت و خوش‌آمدگویی) -->
+      <div class="absolute bottom-4 right-5 left-5 flex items-end justify-between">
+        <div class="flex items-center gap-2.5 bg-slate-950/55 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-2xl">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="liveClock" class="text-xs sm:text-sm font-medium text-slate-200 tracking-wide">۰۷:۲۴</span>
+        </div>
+
+        <button
+          onclick="changeBannerPrompt()"
+          title="تغییر تصویر بنر"
+          class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 bg-slate-950/65 hover:bg-slate-900/90 backdrop-blur-md border border-white/15 text-xs text-slate-200 px-3 py-1.5 rounded-xl cursor-pointer"
+        >
+          <i data-lucide="image" class="w-3.5 h-3.5 text-teal-400"></i>
+          <span>تغییر تصویر بنر</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ۲. هدر و دکمه‌های کنترلی (صفحه شروع شخصی + ویرایش / ذخیره / پیش‌فرض) -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-1">
+      <!-- عنوان سمت راست -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+          <i data-lucide="compass" class="w-5 h-5 text-slate-950 stroke-[2.2]"></i>
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">صفحه شروع شخصی</h1>
+          <p class="text-xs text-slate-400 mt-0.5">دسترسی سریع به ابزارها، تقویم و کارهای روزمره</p>
+        </div>
+      </div>
+
+      <!-- دکمه‌های عملیاتی سمت چپ -->
+      <div class="flex items-center gap-2.5 self-start sm:self-auto">
+        <button
+          id="editToggleBtn"
+          onclick="toggleEditMode()"
+          class="glass-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-200 cursor-pointer"
+        >
+          <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span id="editBtnLabel">ویرایش</span>
+        </button>
+
+        <button
+          onclick="saveState()"
+          class="glass-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-200 hover:!border-emerald-400/50 cursor-pointer"
+        >
+          <i data-lucide="save" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>ذخیره</span>
+        </button>
+
+        <button
+          onclick="resetToDefault()"
+          class="glass-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-200 hover:!border-rose-400/50 cursor-pointer"
+        >
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>پیش‌فرض</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ۳. بخش کلیدهای اصلی (۶ کارت شیشه‌ای مدرن) -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-2">
+          <span class="w-1.5 h-4 rounded-full bg-gradient-to-b from-teal-400 to-cyan-500"></span>
+          کلیدهای اصلی
+        </h2>
+        <button
+          onclick="openAddShortcutModal('main')"
+          class="edit-only hidden text-xs text-teal-400 hover:text-teal-300 flex items-center gap-1 cursor-pointer"
+        >
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>افزودن کلید اصلی</span>
+        </button>
+      </div>
+
+      <div id="mainShortcutsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5">
+        <!-- کارت‌ها به صورت داینامیک با جاوااسکریپت رندر می‌شوند -->
+      </div>
+    </section>
+
+    <!-- ۴. بخش کلیدهای میانبر (۸ آیکون دایره‌ای/مربعی مدرن) -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-2">
+          <span class="w-1.5 h-4 rounded-full bg-gradient-to-b from-cyan-400 to-indigo-500"></span>
+          کلیدهای میانبر
+        </h2>
+        <button
+          onclick="openAddShortcutModal('quick')"
+          class="edit-only hidden text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+        >
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>افزودن میانبر</span>
+        </button>
+      </div>
+
+      <div class="glass-card rounded-3xl p-4 sm:p-5">
+        <div id="quickShortcutsGrid" class="grid grid-cols-4 sm:grid-cols-8 gap-y-5 gap-x-2 justify-items-center">
+          <!-- آیکون‌های میانبر به صورت داینامیک رندر می‌شوند -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ۵. بخش دو ستونه: کارهای روزانه (راست) و تقویم (چپ) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+      <!-- ویجت راست: کارهای روزانه (با کنتراست بالا و رنگبندی هماهنگ) -->
+      <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between min-h-[370px] relative overflow-hidden">
+        <!-- درخشش ظریف گوشه کارت -->
+        <div class="absolute -top-16 -right-16 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div>
+          <!-- هدر کارهای روزانه -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/10">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+                <i data-lucide="check-square" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-base font-bold text-white">کارهای روزانه</h3>
+            </div>
+
+            <!-- نشانگر پیشرفت -->
+            <span
+              id="taskProgressBadge"
+              class="text-xs font-medium px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25"
+            >
+              ۰ / ۱ انجام شده
+            </span>
+          </div>
+
+          <!-- فرم افزودن کار جدید -->
+          <form onsubmit="addTask(event)" class="mt-4 flex items-center gap-2.5">
+            <input
+              id="newTaskInput"
+              type="text"
+              placeholder="کار جدید بنویسید..."
+              class="flex-1 bg-slate-900/80 border border-white/10 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-500/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-400 outline-none transition"
+            />
+            <button
+              type="submit"
+              class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-95 cursor-pointer shrink-0"
+            >
+              افزودن
+            </button>
+          </form>
+
+          <!-- لیست کارها -->
+          <ul id="taskList" class="mt-4 space-y-2.5 max-h-[220px] overflow-y-auto pl-1">
+            <!-- آیتم‌های کار روزانه با جاوااسکریپت رندر می‌شوند -->
+          </ul>
+        </div>
+
+        <!-- فوتر راهنمای کارهای روزانه -->
+        <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+          <span>برای تکمیل روی کار کلیک کنید</span>
+          <button onclick="clearCompletedTasks()" class="text-slate-400 hover:text-rose-400 transition cursor-pointer">
+            پاکسازی انجام‌شده‌ها
+          </button>
+        </div>
+      </div>
+
+      <!-- ویجت چپ: تقویم -->
+      <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between min-h-[370px] relative overflow-hidden">
+        <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div>
+          <!-- هدر تقویم -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/10">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-400">
+                <i data-lucide="calendar-days" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-base font-bold text-white">تقویم</h3>
+            </div>
+
+            <button
+              onclick="goToToday()"
+              class="text-xs text-cyan-300 hover:text-cyan-200 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/25 px-3 py-1 rounded-full transition cursor-pointer"
+            >
+              امروز (۲۶ نوامبر)
+            </button>
+          </div>
+
+          <!-- ناوبری ماه و سال -->
+          <div class="mt-4 flex items-center justify-between bg-slate-900/65 border border-white/10 rounded-2xl px-3 py-2">
+            <button
+              onclick="changeMonth(-1)"
+              title="ماه قبل"
+              class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-teal-500/20 hover:text-teal-300 flex items-center justify-center text-slate-300 transition cursor-pointer"
+            >
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+
+            <span id="calendarMonthLabel" class="text-sm sm:text-base font-bold text-white tracking-wide">
+              نوامبر 2026
+            </span>
+
+            <button
+              onclick="changeMonth(1)"
+              title="ماه بعد"
+              class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-teal-500/20 hover:text-teal-300 flex items-center justify-center text-slate-300 transition cursor-pointer"
+            >
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- روزهای هفته -->
+          <div class="grid grid-cols-7 gap-1 text-center mt-4 mb-2">
+            <span class="text-xs font-semibold text-slate-400">ش</span>
+            <span class="text-xs font-semibold text-slate-400">ی</span>
+            <span class="text-xs font-semibold text-slate-400">د</span>
+            <span class="text-xs font-semibold text-slate-400">س</span>
+            <span class="text-xs font-semibold text-slate-400">چ</span>
+            <span class="text-xs font-semibold text-slate-400">پ</span>
+            <span class="text-xs font-semibold text-rose-400/90">ج</span>
+          </div>
+
+          <!-- شبکه روزهای ماه -->
+          <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1.5 text-center">
+            <!-- روزها با جاوااسکریپت رندر می‌شوند -->
+          </div>
+        </div>
+
+        <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+          <span id="selectedDateDisplay">تاریخ انتخاب‌شده: ۲۶ نوامبر ۲۰۲۶</span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+            روز جاری
+          </span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ۶. نوار جستجوی پایین صفحه (Search Bar Section) -->
+    <section class="glass-card rounded-3xl p-4 sm:p-5 space-y-3.5 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-teal-500/5 via-transparent to-cyan-500/5 pointer-events-none"></div>
+
+      <!-- ردیف جستجوی اصلی -->
+      <form onsubmit="handleSearch(event)" class="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input
+            id="searchQueryInput"
+            type="text"
+            placeholder="جستجو کنید..."
+            class="w-full bg-slate-900/85 border border-white/10 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-500/20 rounded-2xl pr-11 pl-4 py-3 text-sm sm:text-base text-white placeholder-slate-400 outline-none transition"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 hover:brightness-110 text-slate-950 font-extrabold text-sm sm:text-base px-8 py-3 rounded-2xl shadow-lg shadow-cyan-500/25 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>جستجو</span>
+          <i data-lucide="arrow-up-left" class="w-4 h-4 stroke-[2.5]"></i>
+        </button>
+      </form>
+
+      <!-- ردیف تنظیم موتور جستجو -->
+      <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-2.5 pt-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs text-slate-400 flex items-center gap-1.5 shrink-0">
+            <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-400"></i>
+            موتور جستجو:
+          </span>
+
+          <!-- انتخاب سریع موتور جستجو -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button type="button" onclick="setSearchEngine('https://www.google.com/search?q=')" class="engine-chip text-[11px] px-2.5 py-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-400/30 hover:bg-teal-500/30 transition cursor-pointer">Google</button>
+            <button type="button" onclick="setSearchEngine('https://duckduckgo.com/?q=')" class="engine-chip text-[11px] px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 border border-white/10 hover:border-teal-400/40 transition cursor-pointer">DuckDuckGo</button>
+            <button type="button" onclick="setSearchEngine('https://www.bing.com/search?q=')" class="engine-chip text-[11px] px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 border border-white/10 hover:border-teal-400/40 transition cursor-pointer">Bing</button>
+            <button type="button" onclick="setSearchEngine('https://www.youtube.com/results?search_query=')" class="engine-chip text-[11px] px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 border border-white/10 hover:border-teal-400/40 transition cursor-pointer">YouTube</button>
+          </div>
+        </div>
+
+        <input
+          id="searchEngineInput"
+          type="text"
+          dir="ltr"
+          value="https://www.google.com/search?q="
+          class="w-full md:w-80 bg-slate-950/70 border border-white/10 focus:border-cyan-400/50 rounded-xl px-3 py-1.5 text-xs text-slate-300 font-mono outline-none transition text-left"
+        />
+      </div>
+    </section>
+
+  </main>
+
+  <!-- مودال افزودن میانبر جدید -->
+  <div id="addShortcutModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+    <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-white/15 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="modalTitle" class="text-base font-bold text-white">افزودن میانبر جدید</h3>
+        <button onclick="closeAddShortcutModal()" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitNewShortcut(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">عنوان</label>
+          <input id="shortcutTitleInput" type="text" required placeholder="مثلاً: دیجی‌کالا" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:border-teal-400" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">آدرس اینترنتی (URL)</label>
+          <input id="shortcutUrlInput" type="url" dir="ltr" required placeholder="https://example.com" class="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none focus:border-teal-400 text-left" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeAddShortcutModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 bg-slate-800 hover:bg-slate-700 cursor-pointer">انصراف</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-teal-400 to-cyan-400 cursor-pointer">افزودن</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- پیام اعلان (Toast Notification) به جای alert -->
+  <div id="toastNotification" class="fixed bottom-5 left-5 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900/95 backdrop-blur-md border border-teal-400/40 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-400 shrink-0"></i>
+      <span id="toastMessage">تغییرات با موفقیت ذخیره شد.</span>
+    </div>
+  </div>
+
+  <script>
+    // داده‌های پیش‌فرض مطابق با تصویر کاربر
+    const DEFAULT_DATA = {
+      bannerUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=85',
+      searchEngine: 'https://www.google.com/search?q=',
+      mainShortcuts: [
+        { id: 'm1', title: 'گوگل', url: 'https://www.google.com', icon: 'search', color: 'from-sky-400 to-blue-500', iconColor: 'text-sky-400' },
+        { id: 'm2', title: 'یوتیوب', url: 'https://www.youtube.com', icon: 'play-square', color: 'from-rose-500 to-red-600', iconColor: 'text-rose-400' },
+        { id: 'm3', title: 'جیمیل', url: 'https://mail.google.com', icon: 'mail', color: 'from-amber-400 to-orange-500', iconColor: 'text-amber-400' },
+        { id: 'm4', title: 'نقشه', url: 'https://maps.google.com', icon: 'map-pin', color: 'from-emerald-400 to-teal-600', iconColor: 'text-emerald-400' },
+        { id: 'm5', title: 'توییتر', url: 'https://x.com', icon: 'twitter', color: 'from-cyan-400 to-sky-500', iconColor: 'text-cyan-400' },
+        { id: 'm6', title: 'گیت‌هاب', url: 'https://github.com', icon: 'github', color: 'from-slate-300 to-slate-500', iconColor: 'text-slate-200' },
+      ],
+      quickShortcuts: [
+        { id: 'q1', title: 'تلگرام', url: 'https://web.telegram.org', icon: 'send', iconColor: 'text-sky-400' },
+        { id: 'q2', title: 'اینستا', url: 'https://www.instagram.com', icon: 'instagram', iconColor: 'text-pink-400' },
+        { id: 'q3', title: 'واتساپ', url: 'https://web.whatsapp.com', icon: 'message-circle', iconColor: 'text-emerald-400' },
+        { id: 'q4', title: 'ربات', url: 'https://gemini.google.com', icon: 'bot', iconColor: 'text-violet-400' },
+        { id: 'q5', title: 'لینکدین', url: 'https://www.linkedin.com', icon: 'briefcase', iconColor: 'text-blue-400' },
+        { id: 'q6', title: 'نتفلیکس', url: 'https://www.netflix.com', icon: 'clapperboard', iconColor: 'text-red-400' },
+        { id: 'q7', title: 'اسپاتیفای', url: 'https://open.spotify.com', icon: 'headphones', iconColor: 'text-green-400' },
+        { id: 'q8', title: 'ویکی', url: 'https://fa.wikipedia.org', icon: 'book-open', iconColor: 'text-amber-300' },
+      ],
+      tasks: [
+        { id: 1, text: 'بنزین زدن', completed: false }
+      ]
+    };
+
+    // وضعیت برنامه
+    let appState = JSON.parse(localStorage.getItem('persianStartPage_v2')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+    let isEditMode = false;
+    let activeModalType = 'main';
+
+    // وضعیت تقویم (پیش‌فرض: نوامبر 2026 و روز 26 طبق تصویر)
+    let currentCalYear = 2026;
+    let currentCalMonth = 10; // 0-indexed: 10 = November
+    let selectedDay = { year: 2026, month: 10, day: 26 };
+
+    const PERSIAN_MONTH_NAMES = [
+      'ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن',
+      'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'
+    ];
+
+    function toPersianDigits(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return String(num).replace(/\d/g, (d) => persianDigits[d]);
+    }
+
+    // نمایش پیام Toast
+    function showToast(message) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      msgEl.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2800);
+    }
+
+    // رندر کلیدهای اصلی
+    function renderMainShortcuts() {
+      const grid = document.getElementById('mainShortcutsGrid');
+      grid.innerHTML = appState.mainShortcuts.map(item => `
+        <div class="relative group editable-item">
+          <a
+            href="${item.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="if(isEditMode){ event.preventDefault(); }"
+            class="shortcut-card rounded-2xl p-4 flex flex-col items-center justify-center gap-3 text-center h-28 sm:h-32 block"
+          >
+            <div class="w-11 h-11 rounded-2xl bg-slate-800/90 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300">
+              <i data-lucide="${item.icon || 'globe'}" class="w-5 h-5 ${item.iconColor || 'text-teal-400'}"></i>
+            </div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
+              ${item.title}
+            </span>
+          </a>
+          ${isEditMode ? `
+            <button
+              onclick="deleteShortcut('main', '${item.id}')"
+              title="حذف"
+              class="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg hover:bg-rose-400 transition cursor-pointer z-10"
+            >
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // رندر کلیدهای میانبر
+    function renderQuickShortcuts() {
+      const grid = document.getElementById('quickShortcutsGrid');
+      grid.innerHTML = appState.quickShortcuts.map(item => `
+        <div class="relative group editable-item flex flex-col items-center">
+          <a
+            href="${item.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="if(isEditMode){ event.preventDefault(); }"
+            class="flex flex-col items-center gap-2 text-center"
+          >
+            <div class="quick-circle w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md">
+              <i data-lucide="${item.icon || 'link'}" class="w-5 h-5 ${item.iconColor || 'text-cyan-400'}"></i>
+            </div>
+            <span class="text-[11px] sm:text-xs font-medium text-slate-300 group-hover:text-teal-300 transition-colors">
+              ${item.title}
+            </span>
+          </a>
+          ${isEditMode ? `
+            <button
+              onclick="deleteShortcut('quick', '${item.id}')"
+              title="حذف"
+              class="absolute -top-1.5 -left-1 w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md hover:bg-rose-400 transition cursor-pointer z-10"
+            >
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // مدیریت لیست کارهای روزانه
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      const badge = document.getElementById('taskProgressBadge');
+
+      const total = appState.tasks.length;
+      const done = appState.tasks.filter(t => t.completed).length;
+      badge.textContent = `${toPersianDigits(done)} / ${toPersianDigits(total)} انجام شده`;
+
+      if (total === 0) {
+        list.innerHTML = `
+          <li class="text-center py-8 text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-dashed border-white/10">
+            هیچ کاری ثبت نشده است. اولین کار امروز را اضافه کنید!
+          </li>
+        `;
+        return;
+      }
+
+      list.innerHTML = appState.tasks.map(task => `
+        <li
+          class="group flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border transition-all ${
+            task.completed
+              ? 'bg-emerald-950/25 border-emerald-500/20 text-slate-400'
+              : 'bg-slate-900/75 border-white/10 hover:border-teal-400/35 text-slate-100'
+          }"
+        >
+          <button
+            type="button"
+            onclick="toggleTask(${task.id})"
+            class="flex items-center gap-3 flex-1 text-right cursor-pointer"
+          >
+            <span class="w-5 h-5 rounded-lg flex items-center justify-center border transition ${
+              task.completed
+                ? 'bg-emerald-500 border-emerald-400 text-slate-950'
+                : 'border-slate-500 group-hover:border-teal-400 bg-slate-950/60'
+            }">
+              ${task.completed ? '<i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>' : ''}
+            </span>
+            <span class="text-sm ${task.completed ? 'line-through text-slate-500' : 'text-slate-100 font-medium'}">
+              ${task.text}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onclick="deleteTask(${task.id})"
+            title="حذف کار"
+            class="text-slate-500 hover:text-rose-400 p-1 rounded-lg hover:bg-rose-500/10 transition cursor-pointer"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </li>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('newTaskInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appState.tasks.unshift({
+        id: Date.now(),
+        text,
+        completed: false
+      });
+      input.value = '';
+      renderTasks();
+      autoSaveSilent();
+    }
+
+    function toggleTask(id) {
+      const task = appState.tasks.find(t => t.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        renderTasks();
+        autoSaveSilent();
+      }
+    }
+
+    function deleteTask(id) {
+      appState.tasks = appState.tasks.filter(t => t.id !== id);
+      renderTasks();
+      autoSaveSilent();
+    }
+
+    function clearCompletedTasks() {
+      appState.tasks = appState.tasks.filter(t => !t.completed);
+      renderTasks();
+      autoSaveSilent();
+    }
+
+    // رندر تقویم تعاملی (هماهنگ با شنبه تا جمعه)
+    function renderCalendar() {
+      const monthLabel = document.getElementById('calendarMonthLabel');
+      const grid = document.getElementById('calendarDaysGrid');
+      monthLabel.textContent = `${PERSIAN_MONTH_NAMES[currentCalMonth]} ${currentCalYear}`;
+
+      const firstDayOfMonth = new Date(currentCalYear, currentCalMonth, 1).getDay(); // 0=Sun ... 6=Sat
+      // تبدیل به اندیس هفته ایرانی (شنبه = 0, یکشنبه = 1, ..., جمعه = 6)
+      const startOffset = (firstDayOfMonth + 1) % 7;
+
+      const daysInCurrentMonth = new Date(currentCalYear, currentCalMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(currentCalYear, currentCalMonth, 0).getDate();
+
+      let cellsHtml = '';
+
+      // روزهای ماه قبل (محو)
+      for (let i = startOffset - 1; i >= 0; i--) {
+        const dayNum = daysInPrevMonth - i;
+        cellsHtml += `
+          <div class="h-9 flex items-center justify-center text-xs text-slate-600 select-none">
+            ${dayNum}
+          </div>
+        `;
+      }
+
+      // روزهای ماه جاری
+      for (let day = 1; day <= daysInCurrentMonth; day++) {
+        const isToday = (currentCalYear === 2026 && currentCalMonth === 10 && day === 26);
+        const isSelected = (selectedDay.year === currentCalYear && selectedDay.month === currentCalMonth && selectedDay.day === day);
+
+        let btnClass = 'text-slate-200 hover:bg-slate-800/90 hover:text-teal-300';
+        if (isToday) {
+          btnClass = 'bg-gradient-to-br from-emerald-400 to-teal-500 text-slate-950 font-extrabold shadow-lg shadow-teal-500/30 ring-2 ring-teal-300/40';
+        } else if (isSelected) {
+          btnClass = 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 font-bold';
+        }
+
+        cellsHtml += `
+          <button
+            type="button"
+            onclick="selectCalendarDate(${day})"
+            class="h-9 rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center cursor-pointer ${btnClass}"
+          >
+            ${day}
+          </button>
+        `;
+      }
+
+      // تکمیل ردیف آخر با روزهای ماه بعد
+      const totalCells = startOffset + daysInCurrentMonth;
+      const remainingCells = (7 - (totalCells % 7)) % 7;
+      for (let nextDay = 1; nextDay <= remainingCells; nextDay++) {
+        cellsHtml += `
+          <div class="h-9 flex items-center justify-center text-xs text-slate-600 select-none">
+            ${nextDay}
+          </div>
+        `;
+      }
+
+      grid.innerHTML = cellsHtml;
+    }
+
+    function changeMonth(delta) {
+      currentCalMonth += delta;
+      if (currentCalMonth > 11) {
+        currentCalMonth = 0;
+        currentCalYear++;
+      } else if (currentCalMonth < 0) {
+        currentCalMonth = 11;
+        currentCalYear--;
+      }
+      renderCalendar();
+    }
+
+    function selectCalendarDate(day) {
+      selectedDay = { year: currentCalYear, month: currentCalMonth, day };
+      document.getElementById('selectedDateDisplay').textContent =
+        `تاریخ انتخاب‌شده: ${toPersianDigits(day)} ${PERSIAN_MONTH_NAMES[currentCalMonth]} ${toPersianDigits(currentCalYear)}`;
+      renderCalendar();
+    }
+
+    function goToToday() {
+      currentCalYear = 2026;
+      currentCalMonth = 10;
+      selectCalendarDate(26);
+    }
+
+    // جستجو و موتور جستجو
+    function handleSearch(e) {
+      e.preventDefault();
+      const query = document.getElementById('searchQueryInput').value.trim();
+      const engine = document.getElementById('searchEngineInput').value.trim() || 'https://www.google.com/search?q=';
+      if (!query) {
+        showToast('لطفاً عبارتی برای جستجو وارد کنید.');
+        return;
+      }
+      window.open(engine + encodeURIComponent(query), '_blank', 'noopener,noreferrer');
+    }
+
+    function setSearchEngine(url) {
+      document.getElementById('searchEngineInput').value = url;
+      appState.searchEngine = url;
+      autoSaveSilent();
+      showToast('موتور جستجو تغییر کرد.');
+    }
+
+    // حالت ویرایش، ذخیره و بازگردانی به پیش‌فرض
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const container = document.getElementById('appContainer');
+      const label = document.getElementById('editBtnLabel');
+      const editOnlyBtns = document.querySelectorAll('.edit-only');
+
+      if (isEditMode) {
+        container.classList.add('edit-mode-active');
+        label.textContent = 'پایان ویرایش';
+        editOnlyBtns.forEach(btn => btn.classList.remove('hidden'));
+        showToast('حالت ویرایش فعال شد. می‌توانید میانبرها را حذف یا اضافه کنید.');
+      } else {
+        container.classList.remove('edit-mode-active');
+        label.textContent = 'ویرایش';
+        editOnlyBtns.forEach(btn => btn.classList.add('hidden'));
+      }
+
+      renderMainShortcuts();
+      renderQuickShortcuts();
+    }
+
+    function deleteShortcut(type, id) {
+      if (type === 'main') {
+        appState.mainShortcuts = appState.mainShortcuts.filter(item => item.id !== id);
+        renderMainShortcuts();
+      } else {
+        appState.quickShortcuts = appState.quickShortcuts.filter(item => item.id !== id);
+        renderQuickShortcuts();
+      }
+      autoSaveSilent();
+    }
+
+    function openAddShortcutModal(type) {
+      activeModalType = type;
+      document.getElementById('modalTitle').textContent =
+        type === 'main' ? 'افزودن کلید اصلی جدید' : 'افزودن کلید میانبر جدید';
+      document.getElementById('shortcutTitleInput').value = '';
+      document.getElementById('shortcutUrlInput').value = '';
+      const modal = document.getElementById('addShortcutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAddShortcutModal() {
+      const modal = document.getElementById('addShortcutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function submitNewShortcut(e) {
+      e.preventDefault();
+      const title = document.getElementById('shortcutTitleInput').value.trim();
+      const url = document.getElementById('shortcutUrlInput').value.trim();
+      if (!title || !url) return;
+
+      const newItem = {
+        id: 'custom_' + Date.now(),
+        title,
+        url,
+        icon: activeModalType === 'main' ? 'sparkles' : 'link',
+        iconColor: activeModalType === 'main' ? 'text-teal-400' : 'text-cyan-400'
+      };
+
+      if (activeModalType === 'main') {
+        appState.mainShortcuts.push(newItem);
+        renderMainShortcuts();
+      } else {
+        appState.quickShortcuts.push(newItem);
+        renderQuickShortcuts();
+      }
+
+      closeAddShortcutModal();
+      autoSaveSilent();
+      showToast('میانبر جدید اضافه شد.');
+    }
+
+    function changeBannerPrompt() {
+      const coastalBanners = [
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=85',
+        'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1800&q=85',
+        'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1800&q=85'
+      ];
+      const currentIdx = coastalBanners.indexOf(appState.bannerUrl);
+      const nextUrl = coastalBanners[(currentIdx + 1) % coastalBanners.length];
+      appState.bannerUrl = nextUrl;
+      document.getElementById('heroBannerImg').src = nextUrl;
+      autoSaveSilent();
+      showToast('تصویر بنر ساحلی تغییر کرد.');
+    }
+
+    function autoSaveSilent() {
+      appState.searchEngine = document.getElementById('searchEngineInput').value;
+      localStorage.setItem('persianStartPage_v2', JSON.stringify(appState));
+    }
+
+    function saveState() {
+      autoSaveSilent();
+      showToast('تمام تنظیمات و میانبرها با موفقیت ذخیره شدند.');
+    }
+
+    function resetToDefault() {
+      appState = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      localStorage.removeItem('persianStartPage_v2');
+      document.getElementById('heroBannerImg').src = appState.bannerUrl;
+      document.getElementById('searchEngineInput').value = appState.searchEngine;
+      if (isEditMode) toggleEditMode();
+      renderMainShortcuts();
+      renderQuickShortcuts();
+      renderTasks();
+      goToToday();
+      showToast('صفحه به حالت پیش‌فرض بازگردانده شد.');
+    }
+
+    // ساعت زنده بالای بنر
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('liveClock').textContent = toPersianDigits(`${hours}:${minutes}`);
+    }
+
+    // راه‌اندازی اولیه
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('heroBannerImg').src = appState.bannerUrl || DEFAULT_DATA.bannerUrl;
+      document.getElementById('searchEngineInput').value = appState.searchEngine || DEFAULT_DATA.searchEngine;
+      renderMainShortcuts();
+      renderQuickShortcuts();
+      renderTasks();
+      renderCalendar();
+      updateClock();
+      setInterval(updateClock, 30000);
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
